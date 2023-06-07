@@ -4,12 +4,9 @@ RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential protobuf-c-compiler libprotobuf-c-dev git cmake && \
     rm -rf /var/lib/apt/lists/*
 
-# clone repo
-RUN git clone https://github.com/ANTLab-polimi/gNB-e2sm-emu.git /gNB-e2sm-emu
+# copy files
+COPY . /gNB-e2sm-emu
 WORKDIR /gNB-e2sm-emu
-
-# checkout mrn-base
-RUN git checkout mrn-base
 
 # synch submodules
 RUN chmod +x submodule-sync.sh

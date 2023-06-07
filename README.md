@@ -17,14 +17,14 @@ cd gNB-e2sm-emu
 Then build the image:
 
 ```
-docker build -f Dockerfile -t gnb_e2sm_emu:mrn_base .
+docker build -f Dockerfile -t gnb_e2sm_emu:deliverable_neu .
 ```
 
 If the build is successfull, you will see the built image with `docker images`
 
 Now start the container:
 ```
-docker run -dit --name gnb --net=host gnb_e2sm_emu:mrn_base
+docker run -dit --name gnb --net=host gnb_e2sm_emu:deliverable_neu
 ```
 The gNB emulator does not start automatically. First connect a terminal to the running container:
 

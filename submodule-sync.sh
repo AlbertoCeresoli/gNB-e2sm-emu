@@ -1,6 +1,6 @@
 #!/bin/bash
 
 git submodule update --init
+git submodule update --remote --merge
 cd oai-oran-protolib
-git pull
-git checkout deliverable-neu
+git checkout deliverable_neu

@@ -4,9 +4,10 @@ RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential protobuf-c-compiler libprotobuf-c-dev git cmake && \
     rm -rf /var/lib/apt/lists/*
 
-# copy files
-COPY . /gNB-e2sm-emu
+# clone repo
 WORKDIR /gNB-e2sm-emu
+COPY . .
+
 
 # synch submodules
 RUN chmod +x submodule-sync.sh

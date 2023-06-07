@@ -135,9 +135,8 @@ void handle_control(RANMessage* in_mess){
     initialize_ues_if_needed();
     // loop tarhet params and apply
     for(int i=0; i<in_mess->ran_control_request->n_target_param_map; i++){
-        printf("Applying target parameter %s with value %s\n",\
-        get_enum_name(in_mess->ran_control_request->target_param_map[i]->key),\
-        in_mess->ran_control_request->target_param_map[i]->string_value);
+        printf("Applying target parameter %s\n",\
+        get_enum_name(in_mess->ran_control_request->target_param_map[i]->key));
         ran_write(in_mess->ran_control_request->target_param_map[i]);
     }
     // free incoming ran message
@@ -151,6 +150,8 @@ const char* get_enum_name(RANParameter ran_par_enum){
             return "gnb_id";
         case RAN_PARAMETER__UE_LIST:
             return "ue_list";
+        case RAN_PARAMETER__RRM_POLICY_RATIO:
+            return "rrm_policy_ratio";
         default:
             return "unrecognized param";
     }
@@ -165,8 +166,22 @@ void ran_write(RANParamMapEntry* target_param_map_entry){
         case RAN_PARAMETER__UE_LIST: // if we receive a ue list message we need to apply its content
             apply_properties_to_ue_list(target_param_map_entry->ue_list);
             break;
+        case RAN_PARAMETER__RRM_POLICY_RATIO:
+            apply_rrm_policy(target_param_map_entry->rrmpolicyratio);
+            break;
         default:
             printf("ERROR: cannot write RAN, unrecognized target param %d\n", target_param_map_entry->key);
+    }
+}
+
+void apply_rrm_policy(RrmPolicyRatioM* policy){
+    printf("TODO: do something with the received policy, for now we just print\n");
+    printf("Received policies for %lu slices\n",policy->n_slice_policies);
+    for (int s=0; s<policy->n_slice_policies; s++){
+        printf("\t Slice id %d:\n\t\tmin_ratio: %d\n\t\tmax_ratio: %d\n",\
+        policy->slice_policies[s]->s_id,\
+        policy->slice_policies[s]->min_ratio,\
+        policy->slice_policies[s]->max_ratio);
     }
 }
 

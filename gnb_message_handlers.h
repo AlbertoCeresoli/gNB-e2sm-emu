@@ -39,3 +39,4 @@ void free_ue_list(UeListM* ue_list_m);
 void set_ue_properties(int rnti, bool prop_1, float prop_2);
 void apply_properties_to_ue_list(UeListM* ue_list);
 void initialize_ues_if_needed();
+void apply_rrm_policy(RrmPolicyRatioM* policy);

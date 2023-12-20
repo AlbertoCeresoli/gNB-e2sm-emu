@@ -100,6 +100,7 @@ int main(int argc, char **argv) {
     int rcv_len;
     unsigned slen;
     slen = sizeof(in_sockaddr);
+    // start_phy_thread();
     for(;;){
         rcv_len = recvfrom(in_sockfd, recv_buf, max_rcv_len, 0, (struct sockaddr *) &in_sockaddr, &slen);
         printf("\n");

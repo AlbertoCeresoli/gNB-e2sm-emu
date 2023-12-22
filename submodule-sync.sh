@@ -2,4 +2,4 @@
 
 git submodule update --init
 cd oai-oran-protolib
-git checkout mrn-base
+git checkout srs_xapp

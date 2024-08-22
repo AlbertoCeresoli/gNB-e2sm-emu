@@ -10,8 +10,12 @@ int gnb_id = 0;
 bool is_initialized = false;
 typedef struct {
     int rnti;
-    bool prop_1;
-    float prop_2;
+    float rsrp;
+    float ber_uplink;
+    float ber_downlink;
+    int mcs_uplink;
+    int mcs_downlink;
+    int cell_load; 
 } ue_struct;
 ue_struct connected_ue_list[CONNECTED_UES];
 
@@ -23,8 +27,6 @@ void initialize_ues_if_needed(){
         return;
     for (int ue=0;ue<CONNECTED_UES;ue++){
         connected_ue_list[ue].rnti = rand();
-        connected_ue_list[ue].prop_1 = false;
-        connected_ue_list[ue].prop_2 = -1;
     }
     is_initialized = true;
 }
@@ -174,23 +176,20 @@ void apply_properties_to_ue_list(UeListM* ue_list){
     // loop the ues and apply what needed to each, according to what is inside the list received from the xapp
     for(int ue=0; ue<ue_list->n_ue_info; ue++){
         // apply generic properties (example)
-        set_ue_properties(ue_list->ue_info[ue]->rnti,
-                          ue_list->ue_info[ue]->prop_1,
-                          ue_list->ue_info[ue]->prop_2);
+        set_ue_properties(ue_list->ue_info[ue]->rnti);
 
         // more stuff later when needed     
     }
 }
 
-void set_ue_properties(int rnti, bool prop_1, float prop_2){
+void set_ue_properties(int rnti){
 
     // iterate ue list until rnti is found
     bool rnti_not_found = true;
     for(int ue=0; ue<CONNECTED_UES; ue++) {
         if(connected_ue_list[ue].rnti == rnti){
             printf("RNTI found\n");
-            connected_ue_list[ue].prop_1 = prop_1;
-            connected_ue_list[ue].prop_2 = prop_2;
+
             rnti_not_found = false;
             break;
         } else {
@@ -274,22 +273,18 @@ UeListM* build_ue_list_message(){
         // read mesures and add to message (actually just send random data)
 
         // measures
-        ue_info_list[i]->has_meas_type_1 = 1;
-        ue_info_list[i]->meas_type_1 = rand();
-        ue_info_list[i]->has_meas_type_2 = 1;
-        ue_info_list[i]->meas_type_2 = rand();
-        ue_info_list[i]->has_meas_type_3 = 1;
-        ue_info_list[i]->meas_type_3 = rand();
-
-        // properties
-        ue_info_list[i]->has_prop_1 = 1;
-        ue_info_list[i]->prop_1 = connected_ue_list[i].prop_1;
-        if(connected_ue_list[i].prop_2 > -1){
-            ue_info_list[i]->has_prop_2 = 1;
-            ue_info_list[i]->prop_2 = connected_ue_list[i].prop_2;
-        }
-
-
+        ue_info_list[i]->has_rsrp = 1;
+        ue_info_list[i]->rsrp = ((float)(rand() % 100)) / 2.0 - 120;  // RSRP in dBm (random value)
+        ue_info_list[i]->has_ber_uplink = 1;
+        ue_info_list[i]->ber_uplink = ((float)(rand() % 100)) / 100.0;
+        ue_info_list[i]->has_ber_downlink = 1;
+        ue_info_list[i]->ber_downlink = ((float)(rand() % 100)) / 100.0;
+        ue_info_list[i]->has_mcs_uplink = 1;
+        ue_info_list[i]->mcs_uplink= rand() % 28;
+        ue_info_list[i]->has_mcs_downlink = 1;
+        ue_info_list[i]->mcs_downlink= rand() % 28;
+        ue_info_list[i]->has_cell_load = 1;
+        ue_info_list[i]->cell_load = rand() % 100;
     }
     // add a null terminator to the list
     ue_info_list[CONNECTED_UES] = NULL;
